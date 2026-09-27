@@ -1,0 +1,30 @@
+[project]
+name = "py-llm-prompts"
+version = "0.1.0"
+description = "LLM prompt building, OpenAI-compatible client helpers and YAML extraction"
+readme = "README.md"
+authors = [
+    { name = "Yurii Tereshchenko", email = "yurii.tereshchenko.w@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0",
+    "pyyaml>=6.0",
+    "py-config-resolver @ git+https://github.com/yuriiter/py-config-resolver.git",
+]
+
+[project.scripts]
+llm-prompts = "llm_prompts.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.10,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "llm_prompts"
+module-root = "src"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
