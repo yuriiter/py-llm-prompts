@@ -2,12 +2,20 @@ import pytest
 
 from llm_prompts import (
     build_prompt,
+    editor_input,
     extract_yaml,
     prompt_cv,
     read_prompt,
     split_description_and_notes,
     try_till_no_exception,
 )
+
+
+def _fake_editor(tmp_path, body):
+    script = tmp_path / "editor.sh"
+    script.write_text(f"#!/bin/sh\n{body}\n")
+    script.chmod(0o755)
+    return str(script)
 
 
 def test_extract_yaml_fenced():
@@ -28,6 +36,18 @@ def test_read_prompt_strips_comments(tmp_path):
     prompt = tmp_path / "p.txt"
     prompt.write_text("line one // inline\n// full line\nline two\n")
     assert read_prompt(str(prompt)) == "line one\n\nline two"
+
+
+def test_editor_input_reads_saved_file(tmp_path, monkeypatch):
+    monkeypatch.delenv("VISUAL", raising=False)
+    monkeypatch.setenv("EDITOR", _fake_editor(tmp_path, "printf 'job description' > \"$1\""))
+    assert editor_input("paste it") == "job description"
+
+
+def test_editor_input_keeps_prefilled_text(tmp_path, monkeypatch):
+    monkeypatch.delenv("VISUAL", raising=False)
+    monkeypatch.setenv("EDITOR", _fake_editor(tmp_path, "exit 0"))
+    assert editor_input(initial_text="prefilled") == "prefilled"
 
 
 def test_split_description_and_notes():

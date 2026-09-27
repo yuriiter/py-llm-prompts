@@ -3,7 +3,7 @@
 from .builder import build_prompt, read_prompt, remove_comment
 from .client import get_openai_cb
 from .extract import extract_yaml
-from .input import multiline_input, split_description_and_notes
+from .input import editor_input, multiline_input, split_description_and_notes
 from .prompts import load_auto_generation_config, prompt_cv, prompt_cover_letter
 from .retry import try_till_no_exception
 
@@ -11,6 +11,7 @@ __version__ = "0.1.0"
 
 __all__ = [
     "build_prompt",
+    "editor_input",
     "extract_yaml",
     "get_openai_cb",
     "load_auto_generation_config",
